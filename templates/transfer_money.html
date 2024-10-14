@@ -1,0 +1,42 @@
+<h2>Ethereum DApp </h2>
+<input type="text" id="payer_add" placeholder="Enter payer address">
+<input type="text" id="payee_add" placeholder="Enter payee address">
+<input type="number" id="amount_to_transfer" placeholder="Enter amount to transfer">
+
+<button class="btn" onclick="transfer()">Transfer</button>
+<button class="btn" onclick="transaction()">Transaction</button>
+
+<p id="payer_add_v"></p>
+<p id="payee_add_v"></p>
+<p id="amount_v"></p>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+<script>
+    const contractAddress = "";
+    const contractABI =     
+    const web3 = new Web3(Web3.givenProvider);
+    const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+    async function transfer() {
+        const accounts = await web3.eth.requestAccounts();
+        const payer_a = document.getElementById('payer_add').value;
+        const payee_a = document.getElementById('payee_add').value;
+        const amount_t = document.getElementById('amount_to_transfer').value;
+        console.log(payer_a);
+        console.log(payee_a);   
+        console.log(amount_t);
+        console.log("accounts[0] " + accounts[0]);
+        await contract.methods.weixin(amount_t, payer_a, payee_a).send({ from: accounts[0]});
+    }
+
+    async function transaction() {
+        const result = await contract.methods.check_transaction().call();
+        const payerAddress = result[0];
+        const payeeAddress = result[1];
+        const amountTransferred = result[2];
+
+        document.getElementById('payer_add_v').innerText = "Payer: " + payerAddress;
+        document.getElementById('payee_add_v').innerText = "Payee: " + payeeAddress;
+        document.getElementById('amount_v').innerText = "Amount: " + amountTransferred;
+    }
+</script>
